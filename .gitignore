@@ -4,6 +4,7 @@
 .Spotlight-V100
 ._*
 .Trashes
+.vscode
 
 /Database_Alt.py
-Database_Alt.py
+/login_credentials.py

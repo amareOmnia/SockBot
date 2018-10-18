@@ -68,7 +68,7 @@ def acceptable(data,subreddit):
         return False
     # Accepted subreddits to collect entries
     elif not ((subreddit.find('Philosophy') > -1) or (subreddit.find('Science') > -1) or
-                  (subreddit.find('Academic') > -1) or (subreddit.find('History') > -1)):
+            (subreddit.find('Academic') > -1) or (subreddit.find('History') > -1)):
         return False
     else:
         return True
@@ -147,14 +147,14 @@ if __name__ == "__main__":
                         if score > existing_comment_score:
                             if acceptable(body,subreddit):
                                 sql_insert_replace_comment(comment_id, parent_id, parent_data, body, subreddit,
-                                                           created_utc, score)
+                                                        created_utc, score)
 
                     else:
                         if acceptable(body,subreddit):
                             if parent_data:
                                 if score >= 2:
                                     sql_insert_has_parent(comment_id, parent_id, parent_data, body, subreddit,
-                                                          created_utc, score)
+                                                        created_utc, score)
                                     paired_rows += 1
                             else:
                                 sql_insert_no_parent(comment_id, parent_id, body, subreddit, created_utc, score)
@@ -163,7 +163,7 @@ if __name__ == "__main__":
 
             if row_counter % 100000 == 0:
                 print('Total Rows Read: {}, Paired Rows: {}, Time: {}'.format(row_counter, paired_rows,
-                                                                              str(datetime.now())), 'Phil. comments:', accept_index)
+                                                                            str(datetime.now())), 'Phil. comments:', accept_index)
             if row_counter > start_row:
                 if row_counter % cleanup == 0:
                     print("Cleanin up!")
