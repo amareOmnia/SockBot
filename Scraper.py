@@ -27,7 +27,7 @@ class collect_sub:
     '''collects top submissions'''
     comments_list = list()
     for submission in sub_reddit.top(time_filter='month', limit=1):
-        print('Scanning:', submission.title, 'ID:', submission.id)
+        print('Scanning Post:', submission.title, 'ID:', submission.id)
 
         '''collects hot comments from them'''
         submission.comments.replace_more(limit=None)
