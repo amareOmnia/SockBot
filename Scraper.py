@@ -9,6 +9,7 @@ class collect_sub:
 
     # login information for Reddit account is hidden in a gitignore file.
     # See 'login_example.py' for formatting guidelines
+    # Alternatively, you can just replace these variables with your login info
     reddit = praw.Reddit(client_id=lg.get_client_id(),
                         client_secret=lg.get_client_secret(),
                         password=lg.get_password(),

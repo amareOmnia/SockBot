@@ -2,8 +2,10 @@
 # thats actually standardized. Much easier than database.py
 
 import bigquery
+import bigQauth as b
 
-import bigQauth
+email = b.client_email
+print(email)
 
-
-collector = bigquery.client.get_client()
+client = bigquery.client.get_client(project_id = "3ff2a19e84da941f3696af27bb5dc0ece073a71d", service_account=email, private_key_file="credentials.p12", readonly="true")
+print(client)
