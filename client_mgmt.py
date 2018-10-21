@@ -1,6 +1,8 @@
 # new attempt at collecting data. BigQuery now has a dataset of reddit comments
 # that's actually standardized. Much easier than database.py
 import time
+import json
+from os.path import abspath
 import bigquery
 import bigQauth as b
 
@@ -13,19 +15,16 @@ class Data:
     self.client = bigquery.client.get_client(project_id = project, service_account=email, private_key_file=key, readonly="true")
 
   def ping_query(self, query):
-    link_string = "](http"
-    
-    #  send query with 10s delay
+    # sends query to BQ
     job, result = self.client.query(query, timeout=10)
+    # checks if query is complete after 10 secs
     complete, progress = self.client.check_job(job)
     print ("Progress:", progress, "elements")
-
     if complete: 
-      print("query complete")
-    print('cleaning links')
+      print("query request complete")
+    return result
 
-    result_cleaning = ()
-    for a,b,c in result:
-      if result.find("](http") == -1:
-        result_cleaning += ({a,b,c},)
-    return result_cleaning
+  def create_json(self, data):
+    # takes data as string and writes to JSON file   
+    file_output = open(os.path.abspath('RawData.JSON'), "a")
+    json.dump(data, file_output)
