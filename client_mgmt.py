@@ -13,9 +13,19 @@ class Data:
     self.client = bigquery.client.get_client(project_id = project, service_account=email, private_key_file=key, readonly="true")
 
   def ping_query(self, query):
+    link_string = "](http"
+    
+    #  send query with 10s delay
     job, result = self.client.query(query, timeout=10)
     complete, progress = self.client.check_job(job)
     print ("Progress:", progress, "elements")
+
     if complete: 
       print("query complete")
-    return result
+    print('cleaning links')
+
+    result_cleaning = ()
+    for a,b,c in result:
+      if result.find("](http") == -1:
+        result_cleaning += ({a,b,c},)
+    return result_cleaning
