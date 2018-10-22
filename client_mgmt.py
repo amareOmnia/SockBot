@@ -18,8 +18,15 @@ class Data:
     # sends query to BQ
     print('sending ping...')
     job, result = self.client.query(query, timeout=10)
+    complete = False
     # checks if query is complete after 10 secs
-    complete, progress = self.client.check_job(job)
+    while not complete:
+      try:
+        complete, progress = self.client.check_job(job)
+      except BigQueryTimeoutException:
+        print('Download incomplete. Timeout for 10 more secs...')
+        time.sleep(10)
+
     print ("Progress:", progress, "elements")
     if complete: 
       print("query request complete!")
