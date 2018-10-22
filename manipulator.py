@@ -14,11 +14,12 @@ def filter():
   # iterates through defined bad contents, and removes them from list
   for substring in q.remove:
     bad_indexes = []
-    
+
     for i, comment in enumerate(data_dict):
       # creates index list of all comments with prohibited words
       if comment['body'].find(substring) != -1:
         bad_indexes.append(i)
+        
     print(len(bad_indexes), 'prohibited comments found with text: "'+ substring +'"')
 
     bad_length = len(bad_indexes) - 1

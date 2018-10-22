@@ -23,9 +23,11 @@ class Data:
     while not complete:
       try:
         complete, progress = self.client.check_job(job)
-      except BigQueryTimeoutException:
+      except:
         print('Download incomplete. Timeout for 10 more secs...')
         time.sleep(10)
+      else:
+        complete = True
 
     print ("Progress:", progress, "elements")
     if complete: 
