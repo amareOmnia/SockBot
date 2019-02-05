@@ -9,6 +9,7 @@ class collect_sub:
 
     # login information for Reddit account is hidden in a gitignore file.
     # See 'login_example.py' for formatting guidelines
+    # Alternatively, you can just replace these variables with your login info
     reddit = praw.Reddit(client_id=lg.get_client_id(),
                         client_secret=lg.get_client_secret(),
                         password=lg.get_password(),
@@ -27,7 +28,7 @@ class collect_sub:
     '''collects top submissions'''
     comments_list = list()
     for submission in sub_reddit.top(time_filter='month', limit=1):
-        print('Scanning:', submission.title, 'ID:', submission.id)
+        print('Scanning Post:', submission.title, 'ID:', submission.id)
 
         '''collects hot comments from them'''
         submission.comments.replace_more(limit=None)
