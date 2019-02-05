@@ -6,66 +6,50 @@ from os.path import abspath
 import bigquery
 import bigQauth as b
 
+def get_json(mode):
+  if mode == 'r':
+    return json.load(open('data/RawData.json', mode='r', encoding='utf-8'))
+  if mode == 'w':
+    return open('data/RawData.json', mode='w+', encoding='utf-8')
+
 class Data:
+
   def __init__(self):
     email = b.client_email
     project = b.project_id
     key = b.credentials
-    print('connecting to server...')
+    print('Connecting to server...')
     self.client = bigquery.client.get_client(project_id = project, service_account=email, private_key_file=key, readonly="true")
 
   def ping_query(self, query):
     # sends query to BQ
-    print('sending ping...')
+    print('Ping sent...')
     job, result = self.client.query(query, timeout=20)
     complete = False
-    # checks if query is complete after 10 secs
+    # checks if query is complete after delay
     while not complete:
       try:
         complete, progress = self.client.check_job(job)
       except:
         print('Download incomplete. Timeout for 10 more secs...')
-        time.sleep(10)
+        time.sleep(22)
       else:
         complete = True
-
-    print ("Progress:", progress, "elements")
-    if complete: 
-      print("query request complete!")
-
+    print("Data sector downloaded.", progress, "elements retrieved.")
     return result
 
-  def create_json(self, data):
+  def write_json(self, data):
     # takes data as string and writes to JSON file   
-    file_output = open('data/RawData.json', mode='w+', encoding='utf-8')
+    file_output = get_json('w')
     json.dump(data, file_output)
-    print('json data written to file!')
+    print('Local data write success.')
 
   def update_json(self, new_data, old_json):
-    file_output = open('data/RawData.json', mode='w+', encoding='utf-8')
-    
-    
-    old_data = list(file_output)
+    # adds each comment from newest query 
+    combined_data = []
+    for comment in get_json('r'):
+      combined_data.append(comment)
     for comment in new_data:
-      old_data.append(comment)    
-    json.dump(old_data, file_output)
-
-    print('new json data added to list!')
-
-  def add_id_exceptions_to_query(self, query):
-    # adds 'AND link_id NOT LIKE 'existing_id' in multitudes
-    data = json.load(open('data/RawData.json', mode='r', encoding='utf-8'))
-    # grabs number of existing entries
-    comment_quantity = len(data)
-    print('number of comments pre-update: ' + str(comment_quantity))
-    comment_count = 0
-    query_addition = 'AND id NOT IN ('
-    used_link_ids = ''
-    
-    while comment_count<comment_quantity-1:
-      # print(data[comment_count]['id'])
-      used_link_ids += "'"+ data[comment_count]['id'] +"', "
-      comment_count += 1
-    used_link_ids += "'"+ data[(comment_quantity-1)]['id'] +"')"
-
-    return (query + query_addition + used_link_ids), data
+      combined_data.append(comment)    
+    print('Local data prepared to rewrite...')
+    return combined_data
